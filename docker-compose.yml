@@ -1,0 +1,53 @@
+# Local stack: FastAPI backend plus the nginx-served React frontend.
+#
+#   docker compose up --build
+#   open http://localhost:8080
+#
+# Train first (see README) so that runs/detect/fire_smoke/weights/best.pt exists.
+# That folder is mounted read-only at /models; without it the API still starts
+# and /api/health reports "degraded" until weights are provided.
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: fire-smoke-backend:latest
+    environment:
+      MODEL_PATH: /models/best.pt
+      UPLOAD_DIR: /data/uploads
+      OUTPUT_DIR: /data/outputs
+      JOB_DB_PATH: /data/jobs.sqlite3
+      MAX_UPLOAD_MB: "100"
+      CONF_THRESHOLD: "0.35"
+      IOU_THRESHOLD: "0.50"
+      FRAME_STRIDE: "3"
+      JOB_RETENTION_HOURS: "24"
+      LOG_LEVEL: INFO
+      DEVICE: ""
+      # The frontend talks to the backend through the nginx proxy, so only
+      # direct browser access needs an origin here.
+      CORS_ORIGINS: "http://localhost:8080,http://127.0.0.1:8080"
+      # Set to "true" to boot with a pretrained COCO checkpoint when no trained
+      # weights are mounted. It will not detect fire or smoke.
+      ALLOW_COCO_FALLBACK: "false"
+    volumes:
+      - ./runs/detect/fire_smoke/weights:/models:ro
+      - backend-data:/data
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: fire-smoke-frontend:latest
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  backend-data:

@@ -1,0 +1,42 @@
+# Hyper-parameter overrides for the nano model (fast baseline, CPU-friendly).
+# Usage: python training/train.py --model yolo11n --config training/configs/yolo11n.yaml
+#
+# Every key below is passed straight through to ultralytics YOLO.train().
+
+epochs: 100
+imgsz: 640
+batch: 16
+patience: 25
+optimizer: auto
+lr0: 0.01
+lrf: 0.01
+momentum: 0.937
+weight_decay: 0.0005
+warmup_epochs: 3.0
+cos_lr: true
+
+# Loss weights
+box: 7.5
+cls: 0.5
+dfl: 1.5
+
+# Augmentation. Smoke is low-contrast and fire is strongly hue-dependent, so
+# hue jitter is kept small while scale/translate jitter is generous.
+hsv_h: 0.010
+hsv_s: 0.70
+hsv_v: 0.40
+degrees: 0.0
+translate: 0.10
+scale: 0.50
+shear: 0.0
+perspective: 0.0
+flipud: 0.0
+fliplr: 0.5
+mosaic: 1.0
+mixup: 0.0
+close_mosaic: 10
+
+# Runtime
+workers: 8
+seed: 0
+deterministic: true

@@ -1,0 +1,17 @@
+# Runtime dependencies for the detection API.
+# Ranges are upper-bounded so a future major release cannot break a fresh install.
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+python-multipart>=0.0.18,<0.1
+pydantic>=2.8,<3.0
+pydantic-settings>=2.4,<3.0
+opencv-python-headless>=4.9,<6.0
+# Static ffmpeg binary (Windows/macOS/Linux) used to encode browser-playable H.264 MP4s.
+imageio-ffmpeg>=0.5,<1.0
+numpy>=1.26,<3.0
+
+# Detection stack. torch is pinned explicitly so a CPU-only wheel can be chosen:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+ultralytics>=8.3,<9.0
+torch>=2.2,<3.0
+torchvision>=0.17,<1.0

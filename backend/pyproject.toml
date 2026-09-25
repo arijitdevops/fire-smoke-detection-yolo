@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fire-smoke-detection-api"
+version = "0.1.0"
+description = "FastAPI service that detects fire and smoke in images and video with YOLO."
+readme = "../README.md"
+requires-python = ">=3.10"
+license = { file = "../LICENSE" }
+keywords = ["yolo", "object-detection", "fire-detection", "smoke-detection", "fastapi"]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Framework :: FastAPI",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+]
+dependencies = [
+    "fastapi>=0.115,<1.0",
+    "uvicorn[standard]>=0.30,<1.0",
+    "python-multipart>=0.0.18,<0.1",
+    "pydantic>=2.8,<3.0",
+    "pydantic-settings>=2.4,<3.0",
+    "opencv-python-headless>=4.9,<6.0",
+    "imageio-ffmpeg>=0.5,<1.0",
+    "numpy>=1.26,<3.0",
+    "ultralytics>=8.3,<9.0",
+    "torch>=2.2,<3.0",
+    "torchvision>=0.17,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2,<10.0",
+    "httpx>=0.27,<0.29",
+    "ruff>=0.6,<1.0",
+    "mypy>=1.11,<3.0",
+]
+
+[project.scripts]
+fire-smoke-api = "app.main:main"
+
+[tool.setuptools]
+packages = ["app", "app.routers", "app.services"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q --strict-markers"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore:Using `httpx` with `starlette.testclient`:Warning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["app", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "D"]
+# B008: FastAPI's Depends()/File() defaults are the framework idiom.
+# D105/D107: magic methods and __init__ are documented on the class.
+ignore = ["D203", "D213", "B008", "D105", "D107"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_ignores = true
+warn_redundant_casts = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+files = ["app"]

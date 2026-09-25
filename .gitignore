@@ -1,0 +1,39 @@
+# --- Python -------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Node ---------------------------------------------------------------
+node_modules/
+dist/
+.env.local
+.env.*.local
+npm-debug.log*
+
+# --- Model artefacts and generated data ---------------------------------
+runs/
+*.pt
+*.onnx
+*.engine
+*.torchscript
+training/data.generated.yaml
+reports/*.json
+
+# --- Service state ------------------------------------------------------
+backend/uploads/
+backend/outputs/
+uploads/
+outputs/
+*.sqlite3
+
+# --- Editors and OS -----------------------------------------------------
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
